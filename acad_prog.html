@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Program - Techno Main Salt Lake</title>
+    <link rel="stylesheet" href="minor_project.css">
+    <style>
+        /* Body Styles */
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #f4f4f4;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(192, 175, 211, 0.7);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: top 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+            position: relative;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav ul li a:hover {
+            color: yellow;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            left: 0;
+            top: 100%;
+            padding: 10px;
+            opacity: 0;
+            border-radius: 6px;
+            z-index: 999;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(10px);
+        }
+
+        nav ul li:hover > .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Submenu (Departments) */
+        .dropdown-submenu {
+            position: relative;
+            display: block;
+        }
+
+        .dropdown-submenu .submenu-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateX(10px);
+        }
+
+        .dropdown-submenu:hover > .submenu-content {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Style links in dropdown and submenu */
+        .dropdown-content a,
+        .submenu-content a {
+            color: black;
+            text-decoration: none;
+            display: block;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dropdown-content a:hover,
+        .submenu-content a:hover {
+            background-color: #f4f4f4;
+        }
+
+        /* Submenu trigger link */
+        .submenu-trigger {
+            color: black;
+            text-decoration: none;
+            display: block;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .submenu-trigger:hover {
+            background-color: #f4f4f4;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding-top: 120px;
+            padding-bottom: 60px;
+            min-height: calc(100vh - 180px);
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        main h1 {
+            color: #6a0dad;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        /* Paragraph Styles */
+        .exam-info {
+            text-align: left;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .exam-info p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        /* Exams Container */
+        .exams-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        .exam-table th, .exam-table td {
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #333;
+        }
+
+        .exam-table a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+        }
+
+        .exam-table a:hover {
+            text-decoration: underline;
+        }
+
+        /* GIF Container */
+        .gif-container {
+            margin: 20px 0;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #494949;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+            height: 45px;
+            box-sizing: border-box;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .exam-table th, .exam-table td {
+                padding: 8px;
+                border: 2px solid #333;
+            }
+
+            main {
+                padding-top: 100px;
+                padding-bottom: 50px;
+                min-height: calc(100vh - 150px);
+            }
+
+            footer {
+                padding: 10px;
+                height: 40px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div><img src="tmsl-logo.webp" alt="tmsl-logo" width="300" height="50"></div>
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li>
+                    <a href="#">Academics</a>
+                    <div class="dropdown-content">
+                        <a href="acad_prog.html">Academic Program</a>
+                        <div class="dropdown-submenu">
+                            <a href="#" class="submenu-trigger">Departments</a>
+                            <div class="dropdown-content submenu-content">
+                                <a href="cource1.html">Computer Science</a>
+                                <a href="cource2.html">CST - AI & ML</a>
+                                <a href="cource3.html">CSE - Cyber Security</a>
+                                <a href="cource4.html">CSE - IoT</a>
+                                <a href="cource5.html">Civil Engineering</a>
+                                <a href="cource6.html">Electrical Engineering</a>
+                                <a href="cource7.html">Mechanical Engineering</a>
+                            </div>
+                        </div>
+                        <div class="dropdown-submenu">
+                            <a href="#" class="submenu-trigger">Course</a>
+                            <div class="dropdown-content submenu-content">
+                                <a href="course1.html">Diploma</a>
+                                <a href="course2.html">B.Tech</a>
+                                <a href="course3.html">BBA</a>
+                                <a href="course4.html">BCA</a>
+                                <a href="course5.html">MBA</a>
+                                <a href="course6.html">MCA</a>
+                            </div>
+                        </div>
+                        <a href="Celender-2023.pdf">Academics Calendar</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="#admission">Admission</a>
+                    <div class="dropdown-content">
+                        <a href="minor.html">login</a>
+                        <a href="intrance.html">Entrance Exams</a> <!-- Change this line -->
+                        <a href="eligible.html">Eligible for exam</a>
+                        <a href="fee.html">Fee's Structure</a>
+                    </div>
+                </li>
+                <li><a href="placement.html">Placement</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+    <h1>Academic Programs</h1>
+
+    <h2>Departments</h2>
+
+            <section id="computer-science">
+                <h3>Computer Science</h3>
+                <p>At Salt Lake Computer Science, we empower the next generation of tech innovators with cutting-edge education and hands-on experience. Our programs are designed to foster creativity, problem-solving, and leadership, preparing students for dynamic careers in technology and research.</p>
+            </section>
+
+            <section id="cst-aiml">
+                <h3>Computer Science and Technology - AI & ML</h3>
+                <p>At Salt Lake Computer Science, we empower the next generation of tech innovators with cutting-edge education and hands-on experience. Our programs are designed to foster creativity, problem-solving, and leadership, preparing students for dynamic careers in technology and research.</p>
+                            </section>
+
+            <section id="cse-cyber-security">
+                <h3>Computer Science & Engineering - Cyber Security</h3>
+                <p>At Salt Lake Computer Science, we empower the next generation of tech innovators with cutting-edge education and hands-on experience. Our programs are designed to foster creativity, problem-solving, and leadership, preparing students for dynamic careers in technology and research.</p>
+            </section>
+
+            <section id="cse-iot">
+                <h3>Computer Science & Engineering - IoT</h3>
+                <p>At Salt Lake Computer Science, we empower the next generation of tech innovators with cutting-edge education and hands-on experience. Our programs are designed to foster creativity, problem-solving, and leadership, preparing students for dynamic careers in technology and research.</p>
+                            </section>
+
+            <section id="civil-engineering">
+                <h3>Civil Engineering</h3>
+                <p>Welcome to the Department of Civil Engineering at Techno Main Salt Lake, where we strive to provide students with a well-rounded education in the field of civil engineering. Our faculty is comprised of experienced professionals with a passion for teaching and a commitment to excellence. Our state-of-the-art facilities and resources ensure that students have access to the latest technology and equipment, allowing them to gain practical, hands-on experience that will prepare them for successful careers in the industry. Whether you are interested in structural engineering, transportation, environmental engineering or any other area of civil engineering, Techno Main Salt Lake is the ideal place to start your journey.</p>
+                          </section>
+
+            <section id="electrical-engineering">
+                <h3>Electrical Engineering</h3>
+                <p>The Department of Electrical Engineering at Techno Main Salt Lake provides a dynamic and innovative education for students interested in pursuing a career in electrical engineering. Our program is designed to equip students with a strong foundation in the field, providing them with the knowledge and skills necessary to succeed in a variety of industries. Our faculty members are renowned experts in their respective fields, with extensive experience in both academia and industry. We offer a range of courses covering topics such as electronics, power systems, control systems, and communications. Our state-of-the-art laboratories and facilities provide students with hands-on experience, allowing them to apply their theoretical knowledge to practical scenarios.</p>
+                     </section>
+
+            <section id="mechanical-engineering">
+                <h3>Mechanical Engineering</h3>
+                <p>Welcome to the Department of Mechanical Engineering at Techno Main Salt Lake, where we pride ourselves on providing a comprehensive and cutting-edge education in the field of mechanical engineering. Our faculty is comprised of industry leaders and accomplished academics, who provide our students with a unique blend of theoretical knowledge and practical experience. Our program covers a wide range of topics, including materials science, thermodynamics, robotics, and automation. We offer students access to state-of-the-art facilities, including research labs, machine shops, and wind tunnels. Our graduates are well-prepared for a variety of careers, including manufacturing, aerospace, and automotive engineering.</p>
+            </section>
+  </main>
+   <!-- chat boat itegeration -->
+    <div class="chat">
+        <iframe id="chatbot" src="indexchat.html" frameborder="0"></iframe>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 Techno Main Salt Lake. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dropdown menu accessibility
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdowns = document.querySelectorAll('nav ul li');
+
+            dropdowns.forEach(dropdown => {
+                const link = dropdown.querySelector('a');
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+                if (dropdownContent) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const isVisible = dropdownContent.style.display === 'block';
+                        dropdownContent.style.display = isVisible ? 'none' : 'block';
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!dropdown.contains(e.target)) {
+                            dropdownContent.style.display = 'none';
+                        }
+                    });
+
+                    link.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            dropdownContent.style.display = 'block';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

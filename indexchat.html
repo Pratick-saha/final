@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institute Chatbot</title>
+<style>
+    html, body {
+     margin: 0;
+     padding: 0;
+     height: 100%; 
+  }
+
+  #instituteChaticon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+    font-size: 26px;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #instituteChaticon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .institute-chat-container {
+    display: none;
+    position: fixed;
+    bottom: 50px;
+    right: 0px;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 1px solid #ddd;
+  }
+
+  .institute-chat-box {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .institute-input-area {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
+
+  .institute-input-area input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+  }
+
+  .institute-input-area button {
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .institute-input-area button:hover {
+    background: linear-gradient(135deg, #0072ff, #0051c7);
+  }
+
+  .institute-question-buttons {
+    margin-bottom: 10px;
+  }
+
+  .institute-question-buttons button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    background: #0072ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: background 0.3s ease;
+  }
+
+  .institute-question-buttons button:hover {
+    background: #0051c7;
+  }
+
+  /* Scrollbar customization */
+  .institute-chat-box::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .institute-chat-box::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+  }
+
+  .institute-chat-box p {
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+
+  .institute-chat-box strong {
+    color: #0072ff;
+  }
+</style>
+
+</head>
+<body>
+  <div id="instituteChaticon" onclick="instituteToggleChat()">💬</div>
+  <div class="institute-chat-container" id="instituteChatContainer">
+    <div class="institute-question-buttons" id="instituteQuestionButtons"></div>
+    <div class="institute-chat-box" id="instituteChatBox">
+      <p><strong>TMSL: </strong>     <img src="https://img.icons8.com/ios-filled/20/chat.png" style="vertical-align:middle;"> Hello there! 👋👋<br> 😎How can I help you today? </p>
+      <p><strong>TMSL: </strong>chat only for institute purpose 🧑‍🏫👩‍🏫 </p>
+    </div>
+    <div class="institute-input-area">
+      <input type="text" id="instituteUserInput" placeholder="Ask something..." />
+      <button onclick="instituteHandleInput()">Send</button>
+    </div>
+  </div>
+
+  <script>
+  const instituteChatBox = document.getElementById("instituteChatBox");
+  const instituteQuestionButtons = document.getElementById("instituteQuestionButtons");
+
+  const responseMap = {
+  "courses": {
+    triggers: ["course", "courses", "programs offered"],
+    response: "We offer:<br>- B.Tech<br>- BBA<br>- BCA<br>- MBA<br>- MCA<br>and more."
+  },
+  "departments": {
+    triggers: ["department", "departments", "branch", "branches"],
+    response: 'We have departments like:<br>- <b>Computer Science & Technology</b> <a href="cource1.html"  target="_blank">☝️</a><br> - CST-AI & ML <a href="cource2.html" target="_blank">☝️</a><br> - CSE-Cyber Security <a href="cource3.html" target="_blank">☝️</a><br> - CSE-IoT <a href="cource4.html"  target="_blank">☝️</a><br> - <b>Civil Engineering</b> <a href="cource5.html" target="_blank">☝️</a><br> - <b>Mechanical Engineering</b> <a href="cource7.html" target="_blank">☝️</a><br> - <b>Electrical Engineering</b> <a href="cource6.html" target="_blank">☝️</a>'
+  },
+  "approvals": {
+    triggers: ["approval", "approve", "aicte", "nba", "affiliation"],
+    response: "Approved by:<br>→ AICTE<br>→ NBA<br>→ WBUT"
+  },
+  "student login": {
+    triggers: ["student login", "student portal"],
+    response: 'Students can login here: <a href="minor.html" target="_blank">Student Portal</a>'
+  },
+  "faculty login": {
+    triggers: ["faculty login", "faculty portal"],
+    response: 'Faculty can login here: <a href="minor.html" target="_blank">Faculty Portal</a>'
+  },
+  "streams": {
+    triggers: ["stream", "streams", "disciplines", "fields"],
+    response: "Streams available:<br>- Computer Science<br>- Mechanical<br>- Civil<br>- Management<br>- Electronics"
+  },
+  "homepage": {
+    triggers: ["home page", "homepage", "main page"],
+    response: 'Click here to visit the homepage: <a href="index.html" target="_blank">Home Page</a>'
+  },
+  "admission": {
+    triggers: ["admission", "admit", "apply"],
+    response: 'Admission exams and info: <a href="admission.html" target="_blank">CLICK HERE</a>'
+  },
+  "eligibility": {
+    triggers: ["eligibility", "eligible", "criteria"],
+    response: 'Check eligibility: <a href="eligible.html" target="_blank">CLICK HERE</a>'
+  },
+  "fees": {
+    triggers: ["fee", "fees", "tuition"],
+    response: 'Fees structure: <a href="fee.html" target="_blank">CLICK HERE</a>'
+  },
+  "contact": {
+    triggers: ["contact", "phone", "email", "address"],
+    response: 'Contact information is here: <a href="contact.html" target="_blank">Contact Page</a>'
+  },
+  "placement": {
+    triggers: ["placement", "placements", "package", "salary"],
+    response: 'View placement info: <a href="placement.html" target="_blank">Placement Details</a>'
+  },
+  "academics": {
+    triggers: ["academic", "academics", "academic calendar", "exam schedule"],
+    response: 'Academics section includes:<br>- Departments<br>- Courses<br>- Academic Calendar'
+  },
+  "login": {
+    triggers: ["login", "portal"],
+    response: 'Login to view more info: <a href="minor.html" target="_blank">Login Page</a>'
+  },
+  "recruiters": {
+    triggers: ["recruiters", "companies", "jobs", "placements companies"],
+    response: "Top recruiters include:<br>→ Google<br>→ Microsoft<br>→ Infosys<br>→ TCS<br>→ Wipro<br>→ Amazon<br>→ Apple<br>→ Accenture"
+  },
+  "seat": {
+    triggers: ["seat", "vacancy", "available seat", "check seat"],
+    response: 'To check available seats, please <a href="minor.html" target="_blank">login here</a> first.'
+  },
+  "hostel": {
+    triggers: ["hostel", "hostel facility", "hostel available"],
+    response: "NO, hostel facilities are not available."
+  },
+  "cafeteria": {
+    triggers: ["cafeteria", "canteen", "food", "mess"],
+    response: "Yes, our campus includes a clean and affordable cafeteria serving fresh meals."
+  },
+  "location": {
+    triggers: ["location", "where is the college", "directions", "address"],
+    response: "Our college is located at TMSL Campus, EM Bypass, Kolkata-700150. View on map: <a href='https://maps.app.goo.gl/Y3Asp78QWWyTsw5x7' target='_blank'>Google Maps</a>"
+  },
+  "virtual tour": {
+    triggers: ["virtual tour", "tour", "campus video", "see campus"],
+    response: "You can take a virtual tour of our campus here: <a href='campus-tour.html' target='_blank'>Virtual Campus Tour</a>"
+  },
+  "internship": {
+    triggers: ["internship", "internships", "training program", "industrial training"],
+    response: "Yes, we offer internship and industrial training opportunities in collaboration with top companies.like...<br>→ Google<br>→ Microsoft<br>→ Infosys<br>→ TCS<br>→ Wipro<br>→ Amazon<br>→ Apple<br>→ Accenture"
+  },
+  "syllabus diploma": {
+    triggers: ["diploma syllabus", "diploma outline", "diploma curriculum"],
+    response: "You can view the syllabus details for Diploma here: <a href='https://webscte.co.in/Syllabus-part2-part3' target='_blank'>Syllabus Page</a>"
+  },
+  "syllabus btech": {
+    triggers: [" btech syllabus", "btech outline ", "btech curriculum "],
+    response: "You can view the syllabus details for B.tech here: <a href='https://collegedunia.com/courses/bachelor-of-technology-btech-computer-science/syllabus' target='_blank'>Syllabus Page</a>"
+  },
+  "syllabus bba": {
+    triggers: ["bba syllabus ", "bba outline ", "bba curriculum "],
+    response: "You can view the syllabus details for BBA here: <a href='https://collegedunia.com/courses/bachelor-of-business-administration-bba/syllabus' target='_blank'>Syllabus Page</a>"
+  },
+  "syllabus bca": {
+    triggers: ["bca syllabus ", "bca outline ", " bba curriculum"],
+    response: "You can view the syllabus details for BBA here: <a href='https://collegedunia.com/courses/bachelor-of-computer-applications-bca/syllabus' target='_blank'>Syllabus Page</a>"
+  },
+  "syllabus mba": {
+    triggers: ["mba syllabus", "mba outline", "mba curriculum"],
+    response: "You can view the syllabus details for MBA here: <a href='https://collegedunia.com/courses/master-of-business-administration-mba/syllabus' target='_blank'>Syllabus Page</a>"
+  },
+  "syllabus mca": {
+    triggers: ["mca syllabus", "mca outline", "mca curriculum"],
+    response: "You can view the syllabus details for MCA here: <a href='https://www.collegedekho.com/master-of-computer-applications-mca-course-syllabus-subjects-ssid' target='_blank'>Syllabus Page</a>"
+  },
+  "subjects btech": {
+    triggers: ["subjects btech", "what subjects in btech", "btech subjects"],
+    response: "In B.Tech, common subjects include Data Structures, DBMS, Operating Systems, Networks, AI/ML, Web Development, and Project Work."
+  },
+  "subjects diploma": {
+    triggers: ["subjects diploma", "what subjects in diploma", "diploma subjects"],
+    response: "In Diploma, subjects include Engineering Maths, Physics, Basic Electronics, Mechanics, C Programming, and Workshop Practice."
+  },
+  "subjects bba": {
+    triggers: ["subjects bba", "what subjects in bba", "bba subjects"],
+    response: "In BBA, subjects include Principles of Management, Accounting, Economics, Business Law, HR, Marketing, and Entrepreneurship."
+  },
+  "subjects bca": {
+    triggers: ["subjects bca", "what subjects in bca", "bca subjects"],
+    response: "In BCA, subjects include Programming in C/C++, Java, DBMS, Data Structures, Operating Systems, and Web Development."
+  },
+  "subjects mba": {
+    triggers: ["subjects mba", "what subjects in mba", "mba subjects"],
+    response: "In MBA, core subjects include Marketing, Finance, HRM, Strategic Management, Operations, and Business Analytics."
+  },
+  "subjects mca": {
+    triggers: ["subjects mca", "what subjects in mca", "mca subjects"],
+    response: "In MCA, you'll study Algorithms, DBMS, OS, Computer Networks, Software Engineering, Java, Python, and AI."
+  }
+};
+
+  const defaultResponse = "Under development — improvements are on the way!";
+
+const quickQuestions = ["courses", "departments", "approvals", "seat"];
+
+quickQuestions.forEach(key => {
+  const btn = document.createElement("button");
+  btn.textContent = responseMap[key].triggers[0].charAt(0).toUpperCase() + responseMap[key].triggers[0].slice(1);
+  btn.onclick = () => instituteRespond(btn.textContent);
+  instituteQuestionButtons.appendChild(btn);
+});
+
+
+  function instituteRespond(input) {
+  instituteChatBox.innerHTML += `<p><strong>USER: </strong> ${input}</p>`;
+  const inputLower = input.toLowerCase();
+  let matchedResponses = [];
+
+  // Check each key in the response map
+  for (const key in responseMap) {
+    const entry = responseMap[key];
+
+    // If any trigger matches, push the response
+    if (entry.triggers.some(trigger => inputLower.includes(trigger))) {
+      matchedResponses.push(entry.response);
+    }
+  }
+
+  // If any matches found, combine and show them
+  let response = matchedResponses.length > 0
+    ? matchedResponses.map(r => `<p>${r}</p>`).join("")
+    : `<p>${defaultResponse}</p>`;
+
+  instituteChatBox.innerHTML += `<p><strong>TMSL: </strong> ${response}</p>`;
+  instituteChatBox.scrollTop = instituteChatBox.scrollHeight;
+}
+
+
+
+  function instituteHandleInput() {
+    const userInput = document.getElementById("instituteUserInput").value;
+    if (userInput.trim() !== "") {
+      instituteRespond(userInput);
+      document.getElementById("instituteUserInput").value = "";
+    }
+  }
+
+  document.getElementById("instituteUserInput").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      instituteHandleInput();
+    }
+  });
+
+  function instituteToggleChat() {
+    const chat = document.getElementById("instituteChatContainer");
+    chat.style.display = (chat.style.display === "none" || chat.style.display === "") ? "block" : "none";
+  }
+</script>
+
+</body>
+</html>     
